@@ -40,10 +40,11 @@ using namespace std;
 /// @date:2018-09-18
 int main(int argc, char** argv)
 {
-	JsonObject obj0, obj1,obj2;
+	JsonObject obj0, obj1,obj2,obj3;
 	string strVal;
 	int intVal;
 	double dbVal;
+  cJSON* root;
 
 	obj0.add("string0","value0");
 	obj0.add("int0",0);
@@ -73,6 +74,12 @@ int main(int argc, char** argv)
 	cout<<"sub.substring = "<<strVal<<endl;
 
 	obj1.save("./obj1.json");
+
+  root = obj1.to_json();
+  obj3 = root;
+
+  cout << "obj3";
+  cout << obj3 << endl;
 	return 0;
 }
 

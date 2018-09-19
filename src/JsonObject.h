@@ -44,6 +44,7 @@ public:
 	virtual JsonObject clone();
 
 	// JSON array operation
+  virtual int is_empty(){ return (fJson == NULL);  }
 	virtual int is_array();
 	virtual int size_array();
 	virtual int append(cJSON* obj);							//add an json object to json array
