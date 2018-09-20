@@ -328,10 +328,14 @@ int JsonObject::get(string key, int& val)
 	cJSON* obj = sub(key);
 	if(NULL == obj) return -1;
 
-	if(obj->type != cJSON_Number){
-		return -1;
-	}
-	val = obj->valueint;
+	if(obj->type == cJSON_Number){
+	  val = obj->valueint;
+		return 0;
+	}else if(obj->type == cJSON_String){
+    if(NULL != obj->valuestring){
+      val = atoi(obj->valuestring);
+    }
+  }
 	return 0;
 }
 	
@@ -353,10 +357,14 @@ int JsonObject::get(string key, double& val)
 	cJSON* obj = sub(key);
 	if(NULL == obj) return -1;
 
-	if(obj->type != cJSON_Number){
-		return -1;
-	}
-	val = obj->valuedouble;
+	if(obj->type == cJSON_Number){
+	  val = obj->valuedouble;
+		return 0;
+	}else if(obj->type == cJSON_String){
+    if(NULL == obj->valuestring){
+      val = atof(obj->valuestring);
+    }
+  }
 	return 0;
 }
 
@@ -456,6 +464,23 @@ char* JsonObject::to_string()
 	return s;
 }
 
+/// @brief:to_string 
+///
+/// @param: str
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-09-20
+int JsonObject::to_string(string &str)
+{
+  char* s = to_string(); 
+  if(NULL != s){
+    str = s;
+    free(s);
+  }
+  return 0;
+}
 
 
 /// @brief:to_json 
@@ -848,6 +873,37 @@ JsonObject& JsonObject::operator=(cJSON* obj)
 	return *this;
 }
 
+
+/// @brief:operator= 
+///
+/// @param: jsonstring
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-09-20
+JsonObject& JsonObject::operator=(string jsonstring)
+{
+  this->clear();
+  this->parse(jsonstring.c_str(),jsonstring.length());
+  return *this;
+}
+
+#if 0
+/// @brief:operator[] 
+///
+/// @param: i
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-09-20
+JsonObject& JsonObject::operator[](int i)
+{
+  if(i >= size_array()) return *this[0];
+}
+#endif 
+
 /// @brief:operator<< 
 ///
 /// @param: output
@@ -868,6 +924,8 @@ ostream& operator<<(ostream &output, const JsonObject& obj)
 	}
 	return output;
 }
+
+
 
 /// @brief:Dump 
 ///
