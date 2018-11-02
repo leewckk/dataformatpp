@@ -28,7 +28,6 @@ using namespace std;
 #include "JsonObject.h"
 
 
-
 /// @brief:main 
 ///
 /// @param: argc
@@ -40,8 +39,8 @@ using namespace std;
 /// @date:2018-09-18
 int main(int argc, char** argv)
 {
-	JsonObject obj0, obj1,obj2,obj3;
-	string strVal;
+	JsonObject obj0, obj1,obj2,obj3,obj4;
+	string strVal,jsonString;
 	int intVal;
 	double dbVal;
   cJSON* root;
@@ -80,6 +79,12 @@ int main(int argc, char** argv)
 
   cout << "obj3";
   cout << obj3 << endl;
+
+	obj3.to_string(jsonString);
+
+	obj4 = jsonString;
+	cout<< "obj4"<<obj4<<endl;
+
 	return 0;
 }
 

@@ -733,11 +733,6 @@ int JsonObject::append(cJSON* obj)
 	if(NULL == fJson){
 		fJson = cJSON_CreateArray();
 	}
-
-	if((obj->type != cJSON_Object) ||(fJson->type != cJSON_Array)){
-		cJSON_Delete(obj);
-		return -1;
-	}
 	cJSON_AddItemToArray(fJson,obj);
 	return 0;
 }
@@ -948,6 +943,128 @@ int JsonObject::Dump(string comment,cJSON* root)
 	}
 	return 0;
 }
+
+
+
+/// @brief:append 
+///
+/// @param: val
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-11-02
+int JsonObject::append(string val)
+{
+  return append(cJSON_CreateString(val.c_str()));
+}
+
+
+/// @brief:append 
+///
+/// @param: val
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-11-02
+int JsonObject::append(double val)
+{
+  return append(cJSON_CreateNumber(val));
+}
+	
+
+/// @brief:append 
+///
+/// @param: val
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-11-02
+int JsonObject::append(int val)
+{
+  return append(cJSON_CreateNumber(val));
+}
+
+/// @brief:get 
+///
+/// @param: idx
+/// @param: val
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-11-02
+int JsonObject::get(int idx, string& val)
+{
+  char strval[128];
+  int retval = 0;
+  cJSON* root = sub(idx);
+  if(NULL == root) return -1;
+
+  if((root->type == cJSON_String)&&(NULL != root->valuestring)) val = root->valuestring;
+  else if((root->type == cJSON_Number)) {
+#if defined(__CPP_11__)
+    val = string::to_string(root->valuedouble);
+#else
+    sprintf(strval,"%f",root->valuedouble);
+    val = strval;
+#endif 
+  } else retval = -1;
+  return retval;
+}
+
+
+/// @brief:get 
+///
+/// @param: idx
+/// @param: val
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-11-02
+int JsonObject::get(int idx, double& val)
+{
+  int retval = 0;
+  cJSON* root = sub(idx);
+  if(NULL == root) return -1;
+  
+  if((cJSON_String == root->type) && (NULL != root->valuestring)) val = atof(root->valuestring);
+  else if(cJSON_Number == root->type){
+    val = root->valuedouble;
+  }else retval = -1;
+  return retval;
+}
+
+
+/// @brief:get 
+///
+/// @param: idx
+/// @param: val
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-11-02
+int JsonObject::get(int idx, int& val)
+{
+  int retval = 0;
+  cJSON* root = sub(idx);
+  if(NULL == root) return -1;
+  
+  if((cJSON_String == root->type) && (NULL != root->valuestring)) val = atof(root->valuestring);
+  else if(cJSON_Number == root->type){
+    val = root->valuedouble;
+  }else retval = -1;
+  return retval;
+}
+
+
+
+
+
 
 
 

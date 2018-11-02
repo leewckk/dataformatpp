@@ -40,7 +40,12 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	JsonObject arr,sub;
+	JsonObject int_arr,double_arr,string_arr;
 	int i;
+	int intval;
+	double dbval;
+	string strval;
+	char cval[128];
 
 	for(i = 0; i < 16; i++)
 	{
@@ -57,8 +62,43 @@ int main(int argc, char** argv)
 		cout<<"Detach:" << sub<<endl;
 	}
 	cout<<"After detach: "<<arr<<endl;
+
+	for(i = 0; i < 5; i++){
+		dbval = i*3.14;
+		memset(cval,0,sizeof(cval));
+		sprintf(cval,"%f",dbval);
+		strval = cval;
+		int_arr.append(i);
+		double_arr.append(dbval);
+		string_arr.append(strval);
+	}
+
+	cout<<"int array: "<<int_arr<<endl;
+	cout<<"double array: "<<double_arr<<endl;
+	cout<<"string array: "<<string_arr<<endl;
+
+	int_arr.get(3,intval);
+	double_arr.get(2,dbval);
+	string_arr.get(1,strval);
+
+	cout<<"int[3]: "<<intval<<endl;
+	cout<<"double[2]: "<<dbval<<endl;
+	cout<<"string[1]: "<<strval<<endl<<endl;
+
+	string_arr.get(2,dbval);
+	cout<<"string[2]: "<<dbval<<endl<<endl;
+	
+	double_arr.get(3,strval);
+	cout<<"double[3]: "<<strval<<endl<<endl;
+
+	int_arr.get(4,strval);
+	cout<<"int[4]: "<<strval<<endl<<endl;
+	
 	return 0;
 }
+
+
+
 
 
 

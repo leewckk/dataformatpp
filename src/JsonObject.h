@@ -50,6 +50,10 @@ public:
 	virtual int append(cJSON* obj);							//add an json object to json array
 	virtual int append(JsonObject* obj);				//add an json object to json array
 	virtual int append(JsonObject& obj);				//add an json object to json array
+	virtual int append(string val);
+	virtual int append(double val);
+	virtual int append(int val);
+
 	virtual cJSON* detach(int idx);							//detach an object from json array, the detach node should freed by user
 	virtual cJSON* detach(string key);					//detach an object from json object, the detach node should free by user
 	virtual int remove(int idx);								//remove an object from root
@@ -65,6 +69,9 @@ public:
 	virtual int get(string key, double& val);
 	virtual JsonObject get(string key);
 	virtual JsonObject get(int idx);
+	virtual int get(int idx, string& val);
+	virtual int get(int idx, double& val);
+	virtual int get(int idx, int& val);
 
 	virtual cJSON* sub(int idx);
 	virtual cJSON* sub(string key);
