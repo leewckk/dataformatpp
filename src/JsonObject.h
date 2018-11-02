@@ -79,19 +79,20 @@ public:
 	virtual cJSON* new_sub(cJSON* root,string key,cJSON* sub);
 	virtual cJSON* new_sub(cJSON* root,string key);
 	virtual cJSON* new_sub(string key);
-	virtual int print();
+
+  virtual int print();
 	virtual int print(string sub);
 	virtual int print(int idx);
 	virtual char* to_string();
 	virtual int to_string(string &str);
   virtual cJSON* to_json();
-	static int Dump(string comment,cJSON* root);
 	virtual int to_bin(uint8_t *buffer, int& length);
 	virtual JsonObject& operator=(const JsonObject& obj); 
 	virtual JsonObject& operator=(cJSON* obj);
   virtual JsonObject& operator=(string jsonstring);
-//  virtual JsonObject& operator[](int i);
-	friend ostream& operator<<(ostream &output, const JsonObject& obj);
+	
+	static int Dump(string comment,cJSON* root);
+  friend ostream& operator<<(ostream &output, const JsonObject& obj);
 protected:
 	cJSON*			fJson;
 };
