@@ -165,6 +165,20 @@ JsonObject JsonObject::clone()
 	return obj;
 }
 
+
+/// @brief:parse 
+///
+/// @param: detail
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::parse(string detail)
+{
+  return parse(detail.c_str(),detail.length());  
+}
+
 /// @brief:parse 
 ///
 /// @param: s
@@ -289,6 +303,22 @@ int JsonObject::add(string key,JsonObject* val)
 	return (root == NULL);
 }
 
+
+/// @brief:add 
+///
+/// @param: key
+/// @param: val
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::add(string key,JsonObject& val)
+{
+  cJSON* root = new_sub(fJson,key,cJSON_Duplicate(val.fJson,1));
+  return (root == NULL);
+}
+
 /// @brief:get 
 ///
 /// @param: key
@@ -339,8 +369,6 @@ int JsonObject::get(string key, int& val)
 	return 0;
 }
 	
-
-
 /// @brief:get 
 ///
 /// @param: key
@@ -536,20 +564,6 @@ cJSON* JsonObject::sub(int idx)
 /// @date:2018-09-05
 cJSON* JsonObject::sub(string key)
 {
-#if 0	
-	string::size_type pos;
-	if(("" == key)||(NULL == fJson)) return NULL;
-
-	pos = key.find(".");
-	// check sub string exist
-	if(pos == key.npos){
-		cJSON* obj = cJSON_GetObjectItem(fJson,key.c_str());
-		return obj;
-	}else{
-		string substr = key.substr(pos + 1);
-		return sub(substr);
-	}
-#endif 
 	return sub(fJson,key);
 }
 
@@ -884,21 +898,6 @@ JsonObject& JsonObject::operator=(string jsonstring)
   return *this;
 }
 
-#if 0
-/// @brief:operator[] 
-///
-/// @param: i
-///
-/// @return 
-///
-/// @author:leewckk@126.com
-/// @date:2018-09-20
-JsonObject& JsonObject::operator[](int i)
-{
-  if(i >= size_array()) return *this[0];
-}
-#endif 
-
 /// @brief:operator<< 
 ///
 /// @param: output
@@ -944,6 +943,46 @@ int JsonObject::Dump(string comment,cJSON* root)
 	return 0;
 }
 
+
+/// @brief:string_to_int 
+///
+/// @param: key
+///
+/// @return 
+///
+/// @author: leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::string_to_int(string key)
+{
+  string val;
+  int intval;
+  
+  get(key,val);
+  intval = atoi(val.c_str());
+  add(key,intval);
+  return 0;
+}
+
+
+
+/// @brief:string_to_double 
+///
+/// @param: key
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::string_to_double(string key)
+{
+  string val;
+  double dbval;
+  
+  get(key,val);
+  dbval = atof(val.c_str());
+  add(key,dbval);
+  return 0;
+}
 
 
 /// @brief:append 
@@ -1063,6 +1102,115 @@ int JsonObject::get(int idx, int& val)
 
 
 
+/// @brief:rename 
+///
+/// @param: key
+/// @param: newkey
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::rename(string key, string newkey)
+{
+  return rename(fJson,key,newkey);
+}
+
+
+/// @brief:rename 
+///
+/// @param: root
+/// @param: key
+/// @param: newkey
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::rename(cJSON* root, string key, string newkey)
+{
+  cJSON* subroot;
+  int retval = 0;
+  if(NULL == root) return -1;
+  
+  subroot = sub(root,key);
+  if(NULL == subroot) return -1; 
+  else if(subroot->type == cJSON_Object) return rename(subroot,key,newkey);
+  else if(subroot->type == cJSON_Array) return renamearray(subroot,key,newkey);
+  else {
+    if(NULL != subroot->string) free(subroot->string);
+    subroot->string = strdup(newkey.c_str());
+  }
+  return retval;
+}
+
+
+/// @brief:renamearray 
+///
+/// @param: root
+/// @param: key
+/// @param: newkey
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::renamearray(cJSON* root, string key, string newkey)
+{
+  cJSON* subroot;
+  if(NULL == root) return -1;
+  int arrsize = cJSON_GetArraySize(root);
+  for(int i = 0; i < arrsize; i++){
+    subroot = cJSON_GetArrayItem(root,i);
+    rename(subroot,key,newkey);
+  }
+  return 0; 
+}
+
+
+/// @brief:renamearray 
+///
+/// @param: key
+/// @param: newkey
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::renamearray(string arr,string key,string newkey)
+{
+  return renamearray(fJson,arr,key,newkey); 
+}
+
+
+/// @brief:renamearray 
+///
+/// @param: root
+/// @param: arr
+/// @param: key
+/// @param: newkey
+///
+/// @return 
+///
+/// @author:leewckk@126.com
+/// @date:2018-12-08
+int JsonObject::renamearray(cJSON* root,string arr,string key, string newkey)
+{
+  cJSON* subroot;
+  if(NULL == root) return -1;
+
+  if(cJSON_Array == root->type) subroot = root;
+  else subroot = sub(root,arr);
+
+  if((NULL == subroot) || (cJSON_Array != subroot->type)) return -1;
+  int arrsize = cJSON_GetArraySize(subroot); 
+  
+  for(int i = 0; i < arrsize; i++){
+    cJSON* item = cJSON_GetArrayItem(subroot,i);
+    rename(item,key,newkey);
+  }
+  return 0;  
+}
 
 
 

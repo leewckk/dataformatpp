@@ -39,7 +39,40 @@ using namespace std;
 /// @date:2018-09-18
 int main(int argc, char** argv)
 {
-	JsonObject obj0, obj1,obj2,obj3,obj4;
+  string parstr;
+  JsonObject config,par;
+#if 1
+ /*  config.add("frequency",100); */
+  // config.add("unit","cm");
+  /* config.save("configRadar.json"); */
+
+  config.add("Cycle",60*60); 
+  config.add("MaxVideoCache",16);
+  config.add("MaxPictureCache",128);
+  config.add("VideoChannelNumber",1);
+  config.add("KeyTimeOffset",0);
+  config.add("Interval",100);
+  config.add("ReportImgCount",3);
+  config.save("configCapture.json"); 
+#else 
+  config.load("/opt/conf/configMVR.json");
+  cout<<config<<endl;
+
+  int before,after;
+
+  config.get("WeightBeforeStart",before);
+  config.get("WeightAfterStable",after);
+
+  cout<<"before: "<<before<<endl;
+  cout<<"after: "<<after<<endl;
+
+  parstr = "fdsfdssffsdfsd";
+  cout<<"error parse: "<<par.parse(parstr.c_str(),parstr.length());
+  cout<<endl;
+
+#endif   
+#if 0
+  JsonObject obj0, obj1,obj2,obj3,obj4;
 	string strVal,jsonString;
 	int intVal;
 	double dbVal;
@@ -84,7 +117,7 @@ int main(int argc, char** argv)
 
 	obj4 = jsonString;
 	cout<< "obj4"<<obj4<<endl;
-
+#endif 
 	return 0;
 }
 

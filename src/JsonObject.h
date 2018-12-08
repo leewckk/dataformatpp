@@ -31,70 +31,82 @@
 class JsonObject : public DataObject
 {
 public:
-	JsonObject();
-	JsonObject(const JsonObject& obj);
-	~JsonObject();
-	
-	virtual DataObject* dup();
-	virtual int load(string path);
-	virtual int save(string path);
-	virtual int clear();
-	virtual int parse(const char* s, const int size);
-	virtual int parse(cJSON* root);
-	virtual JsonObject clone();
+  JsonObject();
+  JsonObject(const JsonObject& obj);
+  ~JsonObject();
+  
+  virtual DataObject* dup();
+  virtual int load(string path);
+  virtual int save(string path);
+  virtual int clear();
+  virtual int parse(string detail);
+  virtual int parse(const char* s, const int size);
+  virtual int parse(cJSON* root);
+  virtual JsonObject clone();
 
-	// JSON array operation
+  // JSON array operation
   virtual int is_empty(){ return (fJson == NULL);  }
-	virtual int is_array();
-	virtual int size_array();
-	virtual int append(cJSON* obj);							//add an json object to json array
-	virtual int append(JsonObject* obj);				//add an json object to json array
-	virtual int append(JsonObject& obj);				//add an json object to json array
-	virtual int append(string val);
-	virtual int append(double val);
-	virtual int append(int val);
+  virtual int is_array();
+  virtual int size_array();
+  virtual int append(cJSON* obj);                            //add an json object to json array
+  virtual int append(JsonObject* obj);                //add an json object to json array
+  virtual int append(JsonObject& obj);                //add an json object to json array
+  virtual int append(string val);
+  virtual int append(double val);
+  virtual int append(int val);
+  
+  virtual cJSON* detach(int idx);                            //detach an object from json array
+  virtual cJSON* detach(string key);                    //detach an object from json object
+  virtual int remove(int idx);                                //remove an object from root
+  virtual int remove(string key);                            //remove an object from root
+    
+  virtual int add(string key,string val);
+  virtual int add(string key,int val);
+  virtual int add(string key,double val);
+  virtual int add(string key,JsonObject* val);
+  virtual int add(string key,JsonObject& val);
+  
+  virtual int get(string key, string& val);
+  virtual int get(string key, int& val);
+  virtual int get(string key, double& val);
+  virtual JsonObject get(string key);
+  virtual JsonObject get(int idx);
 
-	virtual cJSON* detach(int idx);							//detach an object from json array, the detach node should freed by user
-	virtual cJSON* detach(string key);					//detach an object from json object, the detach node should free by user
-	virtual int remove(int idx);								//remove an object from root
-	virtual int remove(string key);							//remove an object from root
-	
-	virtual int add(string key,string val);
-	virtual int add(string key,int val);
-	virtual int add(string key,double val);
-	virtual int add(string key,JsonObject* val);
-	
-	virtual int get(string key, string& val);
-	virtual int get(string key, int& val);
-	virtual int get(string key, double& val);
-	virtual JsonObject get(string key);
-	virtual JsonObject get(int idx);
-	virtual int get(int idx, string& val);
-	virtual int get(int idx, double& val);
-	virtual int get(int idx, int& val);
+  virtual int get(int idx, string& val);
+  virtual int get(int idx, double& val);
+  virtual int get(int idx, int& val);
 
-	virtual cJSON* sub(int idx);
-	virtual cJSON* sub(string key);
-	virtual cJSON* sub(cJSON* root, string key);
-	virtual cJSON* new_sub(cJSON* root,string key,cJSON* sub);
-	virtual cJSON* new_sub(cJSON* root,string key);
-	virtual cJSON* new_sub(string key);
+  virtual int string_to_int(string key);
+  virtual int string_to_double(string key);
+  
+  virtual int rename(string key, string newkey);
+  virtual int rename(cJSON* root, string key, string newkey);
+  virtual int renamearray(string arr,string key,string newkey);
+  virtual int renamearray(cJSON* root,string key, string newkey);
+  virtual int renamearray(cJSON* root,string arr,string key, string newkey);
+
+  virtual cJSON* sub(int idx);
+  virtual cJSON* sub(string key);
+  virtual cJSON* sub(cJSON* root,string key);
+  virtual cJSON* new_sub(cJSON* root,string key,cJSON* sub);
+  virtual cJSON* new_sub(cJSON* root,string key);
+  virtual cJSON* new_sub(string key);
 
   virtual int print();
-	virtual int print(string sub);
-	virtual int print(int idx);
-	virtual char* to_string();
-	virtual int to_string(string &str);
+  virtual int print(string sub);
+  virtual int print(int idx);
+  virtual char* to_string();
+  virtual int to_string(string &str);
   virtual cJSON* to_json();
-	virtual int to_bin(uint8_t *buffer, int& length);
-	virtual JsonObject& operator=(const JsonObject& obj); 
-	virtual JsonObject& operator=(cJSON* obj);
-  virtual JsonObject& operator=(string jsonstring);
-	
-	static int Dump(string comment,cJSON* root);
+  virtual int to_bin(uint8_t *buffer, int& length);
+  virtual JsonObject& operator=(const JsonObject& obj); 
+  virtual JsonObject& operator=(cJSON* obj); 
+  virtual JsonObject& operator=(string str);
+  
+  static int Dump(string comment,cJSON* root);
   friend ostream& operator<<(ostream &output, const JsonObject& obj);
 protected:
-	cJSON*			fJson;
+  cJSON*            fJson;
 };
 
 

@@ -3,6 +3,7 @@ set(exp_lists
 	load
 	create
 	array
+  rename
 	)
 
 option(ENABLE_VALGRIND "Enable valgrind memory check for the test" OFF)

@@ -39,7 +39,46 @@ using namespace std;
 /// @date:2018-09-18
 int main(int argc, char** argv)
 {
-	JsonObject arr,sub;
+  JsonObject config,channelConfig;
+  
+  for(int i = 0; i < 6; i++){
+    
+    channelConfig.add("channel",i);
+    channelConfig.add("device","/dev/video0");
+    channelConfig.add("usbport","/sys/bus/usb/devices/1-1/1-1.1/1-1.1:1.0/");
+    
+   /*  channelConfig.add("channel",i); */
+    // channelConfig.add("hardware",i + 1);
+    // channelConfig.add("tty","/dev/ttyS0");
+    // channelConfig.add("startMap",3 - i);
+    // channelConfig.add("endMap",4*i);
+    // channelConfig.add("maxMap",4);
+    // channelConfig.add("bps",500000);
+    // channelConfig.add("channelBPS",115200);
+    // channelConfig.add("ZMQPort",9800 + i * 10);
+    // channelConfig.add("ZMQCenter",5810);
+    config.append(channelConfig);
+
+    
+    /*     channelConfig.add("channel",i); */
+    // channelConfig.add("workspace","/opt/var/media");
+    // channelConfig.add("fps",30);
+    // channelConfig.add("idle",1000);
+    // channelConfig.add("recordtype",0);
+    // channelConfig.add("showwindow",0);
+    // channelConfig.add("captureWidth",4608);
+    // channelConfig.add("captureHeight",3456);
+    // channelConfig.add("recordWidth",1920);
+    // channelConfig.add("recordHeight",1080);
+    // channelConfig.add("detector",1);
+    /* config.append(channelConfig); */
+  }
+
+  cout<<config<<endl;
+  config.save("configCamera.json");
+//  config.save("configCOMExt.json");
+#if 0
+  JsonObject arr,sub;
 	JsonObject int_arr,double_arr,string_arr;
 	int i;
 	int intval;
@@ -93,7 +132,7 @@ int main(int argc, char** argv)
 
 	int_arr.get(4,strval);
 	cout<<"int[4]: "<<strval<<endl<<endl;
-	
+#endif 	
 	return 0;
 }
 
