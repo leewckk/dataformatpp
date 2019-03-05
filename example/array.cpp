@@ -42,7 +42,11 @@ int main(int argc, char** argv)
   JsonObject config,channelConfig;
   
   for(int i = 0; i < 6; i++){
-    
+    channelConfig.add("channel",i);
+    channelConfig.add("ip","tcp://192.168.199.1");
+    channelConfig.add("port",4000 + i*10);
+
+#if 0  //// configCamera.json   
     channelConfig.add("channel",i);
     channelConfig.add("device","/dev/video0");
     channelConfig.add("usbport","/sys/bus/usb/devices/1-1/1-1.1/1-1.1:1.0/");
@@ -57,8 +61,8 @@ int main(int argc, char** argv)
     // channelConfig.add("channelBPS",115200);
     // channelConfig.add("ZMQPort",9800 + i * 10);
     // channelConfig.add("ZMQCenter",5810);
+#endif 
     config.append(channelConfig);
-
     
     /*     channelConfig.add("channel",i); */
     // channelConfig.add("workspace","/opt/var/media");
@@ -75,7 +79,8 @@ int main(int argc, char** argv)
   }
 
   cout<<config<<endl;
-  config.save("configCamera.json");
+  config.save("configSharedEth.json");
+///  config.save("configCamera.json");
 //  config.save("configCOMExt.json");
 #if 0
   JsonObject arr,sub;

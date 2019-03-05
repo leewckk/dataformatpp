@@ -76,7 +76,10 @@ int JsonObject::load(string path)
 {
 	if(DataObject::load(path) != 0) return -1;
 
-	if(NULL != fJson) cJSON_Delete(fJson);
+  if(NULL != fJson) {
+    cJSON_Delete(fJson);
+    fJson = NULL;
+  }
 	fJson = cJSON_Parse((const char*)fBuffer);
 
 	if(NULL == fJson) return -1;
@@ -192,7 +195,10 @@ int JsonObject::parse(const char* s, const int size)
 {
 	if((NULL == s) || (size == 0)) return -1;
 
-	if(NULL != fJson) cJSON_Delete(fJson);
+  if(NULL != fJson) {
+    cJSON_Delete(fJson);
+    fJson = NULL;
+  }
 	fJson = cJSON_Parse(s);
 	return (NULL == fJson);
 }
@@ -209,7 +215,10 @@ int JsonObject::parse(const char* s, const int size)
 int JsonObject::parse(cJSON* root)
 {
 	if(root == NULL) return -1;
-	if(NULL != fJson) cJSON_Delete(fJson);
+  if(NULL != fJson) {
+    cJSON_Delete(fJson);
+    fJson = NULL;
+  }
 
 	fJson = cJSON_Duplicate(root,1);
 	return (NULL == fJson);
@@ -630,7 +639,10 @@ cJSON* JsonObject::new_sub(cJSON* root,string key,cJSON* subobj)
 
 	if(NULL == root){
 		root = cJSON_CreateObject();
-		if(fJson != NULL) cJSON_Delete(fJson);
+    if(fJson != NULL) {
+      cJSON_Delete(fJson);
+      fJson = NULL;
+    }
 		fJson = root;
 	} 
 	leftstr = key;
@@ -858,7 +870,10 @@ cJSON* JsonObject::detach(string key)
 /// @date:2018-09-05
 JsonObject& JsonObject::operator=(const JsonObject& obj)
 {
-	if(NULL != this->fJson) cJSON_Delete(this->fJson);
+  if(NULL != this->fJson){
+    cJSON_Delete(this->fJson);
+    this->fJson = NULL;
+  } 
 	if(NULL != obj.fJson){
 		this->fJson = cJSON_Duplicate(obj.fJson,1);
 	}
