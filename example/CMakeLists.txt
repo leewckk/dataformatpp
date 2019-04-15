@@ -4,6 +4,8 @@ set(exp_lists
 	create
 	array
   rename
+  configGPio
+  configWeight
 	)
 
 option(ENABLE_VALGRIND "Enable valgrind memory check for the test" OFF)
